@@ -3,10 +3,6 @@ import asyncHandler from "express-async-handler"
 import userModel from "../models/userModel.js"
 
 const verifyUser = asyncHandler(async (req, res, next) => {
-    console.log("🚀 ~ file: authMiddleware.js:6 ~ verifyUser ~ req-body:", req.body)
-    console.log("🚀 ~ >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
-
-    console.log("🚀 ~ file: authMiddleware.js:6 ~ verifyUser ~ req-cooke:", req.cookies)
     const token = req.cookies.jwt
     if (token) {
         try {

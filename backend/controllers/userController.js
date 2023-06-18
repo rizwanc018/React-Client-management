@@ -56,8 +56,30 @@ const userController = {
         res.status(200).json({ msg: 'Logged out succesfully' })
     },
     getUserProfile: (req, res) => {
-        res.status(200).json({msg: "User Profile"})
-    }
+        const user = {
+            _id: req.user._id,
+            name: req.user.name,
+            email: req.user.email
+        }
+        res.status(200).json(user)
+    },
+    updateUser: asyncHandler(async (req, res) => {
+        const user = await userModel.findById(req.user._id)
+
+        if (user) {
+            user.name = req.body.name || user.name;
+            user.email = req.body.email || user.email;
+
+            if (req.body.password) {
+                user.password = req.body.password;
+            }
+            const updatedUser = await user.save()
+            res.status(201).json(updatedUser)
+        } else {
+            res.status(404);
+            throw new Error('User not found');
+        }
+    })
 }
 
 export default userController
