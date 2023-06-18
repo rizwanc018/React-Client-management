@@ -1,9 +1,63 @@
 import asyncHandler from 'express-async-handler';
+import userModel from '../models/userModel.js';
+import generateJwtToken from '../utils/generateJwtToken.js';
 
 const userController = {
     authUser: asyncHandler(async (req, res) => {
-        res.status(200).json({ msg: "Hello rrrrrrr" })
-    })
+        const { email, password } = req.body
+        const user = await userModel.findOne({ email })
+
+        if (user && user.matchPassword(password)) {
+            generateJwtToken(res, user._id)
+
+            res.status(201).json({
+                _id: user._id,
+                name: user.name,
+                email: user.email
+            })
+        } else {
+            res.status(400)
+            throw new Error('Invalid user data')
+        }
+
+    }),
+    registerUser: asyncHandler(async (req, res) => {
+        const { name, email, password } = req.body
+        const isUserExists = await userModel.findOne({ email })
+
+        if (isUserExists) {
+            res.status(400)
+            throw new Error('Email already Exist')
+        }
+
+        const user = await userModel.create({
+            name,
+            email,
+            password,
+        })
+
+        if (user) {
+            generateJwtToken(res, user._id)
+            res.status(201).json({
+                _id: user._id,
+                name: user.name,
+                email: user.email
+            })
+        } else {
+            res.status(400)
+            throw new Error('Invalid user data')
+        }
+    }),
+    logOutUser: (req, res) => {
+        res.cookie('jwt', '', {
+            httpOnly: true,
+            expires: new Date(0),
+        })
+        res.status(200).json({ msg: 'Logged out succesfully' })
+    },
+    getUserProfile: (req, res) => {
+        res.status(200).json({msg: "User Profile"})
+    }
 }
 
 export default userController
