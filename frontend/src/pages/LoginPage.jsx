@@ -1,18 +1,37 @@
-import { useState } from "react";
-import { Form, Button, Row, Col } from "react-bootstrap";
-import { Link } from "react-router-dom";
-import FormContainer from "../components/FormContainer";
-
 import React from 'react'
-import { set } from "mongoose";
+import { useState, useEffect } from "react";
+import { Form, Button, Row, Col } from "react-bootstrap";
+import { Link, useNavigate } from "react-router-dom";
+import FormContainer from "../components/FormContainer";
+import { useDispatch, useSelector } from "react-redux";
+import { useLoginMutation } from "../slices/usersApiSlice";
+import { setCredentials } from '../slices/authSlice';
+import { toast } from 'react-toastify'
 
 function LoginPage() {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
 
-    const submitHandler = (e) => {
+    const navigate = useNavigate()
+    const dispatch = useDispatch()
+
+    const [login, { isLoading, error }] = useLoginMutation()
+    const { userInfo } = useSelector(state => state.auth)
+
+    useEffect(() => {
+        if (userInfo)
+            navigate('/')
+    }, [navigate, userInfo])
+
+    const submitHandler = async (e) => {
         e.preventDefault()
-        console.log('Submitted');
+        try {
+            const res = await login({ email, password }).unwrap()
+            dispatch(setCredentials({ ...res }))
+            navigate('/')
+        } catch (err) {
+            toast(err?.data?.message || err.error, { type: 'error' });
+        }
     }
     return (
         <FormContainer>

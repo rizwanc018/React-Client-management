@@ -7,7 +7,7 @@ const userController = {
         const { email, password } = req.body
         const user = await userModel.findOne({ email })
 
-        if (user && user.matchPassword(password)) {
+        if (user && (await user.matchPassword(password))) {
             generateJwtToken(res, user._id)
 
             res.status(201).json({
@@ -17,7 +17,7 @@ const userController = {
             })
         } else {
             res.status(400)
-            throw new Error('Invalid user data')
+            throw new Error('Invalid email or password')
         }
 
     }),
