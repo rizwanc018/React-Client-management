@@ -1,21 +1,45 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Form, Button, Row, Col } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { useRegisterMutation } from "../slices/usersApiSlice";
+import { setCredentials } from '../slices/authSlice';
+import { toast } from 'react-toastify'
+import Loader from '../components/Loader';
 import FormContainer from "../components/FormContainer";
 
-import React from 'react'
-import { set } from "mongoose";
 
 function RegisterPage() {
     const [name, setName] = useState('')
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
-    const [confirmpassword, setconfirmPassword] = useState('')
+    const [confirmPassword, setconfirmPassword] = useState('')
 
+    const dispatch = useDispatch()
+    const navigate = useNavigate()
 
-    const submitHandler = (e) => {
+    const { userInfo } = useSelector(state => state.auth)
+    const [register, { isLoading, error }] = useRegisterMutation()
+
+    useEffect(() => {
+        if (userInfo) {
+            navigate('/');
+        }
+    }, [navigate, userInfo]);
+
+    const submitHandler = async (e) => {
         e.preventDefault()
-        console.log('Submitted');
+        if (password !== confirmPassword)
+            toast.error('Passwords do not match')
+        else {
+            try {
+                const res = await register({ name, email, password }).unwrap()
+                dispatch(setCredentials({ ...res }))
+                navigate('/')
+            } catch (err) {
+                toast(err?.data?.message || err.error, { type: 'error' });
+            }
+        }
     }
     return (
         <FormContainer>
@@ -56,11 +80,12 @@ function RegisterPage() {
                     <Form.Control
                         type="password"
                         placeholder="Confirm Password"
-                        value={confirmpassword}
+                        value={confirmPassword}
                         onChange={(e) => setconfirmPassword(e.target.value)}
                     >
                     </Form.Control>
                 </Form.Group>
+                {isLoading && <Loader />}
                 <Button type="submit" variant="primary" className="mt-3">
                     Sign Up
                 </Button>

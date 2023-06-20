@@ -7,6 +7,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { useLoginMutation } from "../slices/usersApiSlice";
 import { setCredentials } from '../slices/authSlice';
 import { toast } from 'react-toastify'
+import Loader from '../components/Loader';
+
 
 function LoginPage() {
     const [email, setEmail] = useState('')
@@ -57,6 +59,7 @@ function LoginPage() {
                     >
                     </Form.Control>
                 </Form.Group>
+                {isLoading && <Loader />}
                 <Button type="submit" variant="primary" className="mt-3">
                     Sign In
                 </Button>

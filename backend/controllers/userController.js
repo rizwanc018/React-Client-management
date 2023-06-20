@@ -6,6 +6,7 @@ const userController = {
     authUser: asyncHandler(async (req, res) => {
         const { email, password } = req.body
         const user = await userModel.findOne({ email })
+        console.log("🚀 ~ file: userController.js:9 ~ authUser:asyncHandler ~ user:", user)
 
         if (user && (await user.matchPassword(password))) {
             generateJwtToken(res, user._id)
