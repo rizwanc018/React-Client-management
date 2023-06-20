@@ -10,7 +10,7 @@ function Loader() {
                 width: '100px',
                 height: '100px',
                 margin: 'auto',
-                display: 'block'
+                display: 'block',
             }}
         >
 

@@ -1,6 +1,7 @@
 import asyncHandler from 'express-async-handler';
 import userModel from '../models/userModel.js';
 import generateJwtToken from '../utils/generateJwtToken.js';
+import mongoose from 'mongoose';
 
 const userController = {
     authUser: asyncHandler(async (req, res) => {
@@ -14,7 +15,8 @@ const userController = {
             res.status(201).json({
                 _id: user._id,
                 name: user.name,
-                email: user.email
+                email: user.email,
+                image: user.image
             })
         } else {
             res.status(400)
@@ -79,6 +81,17 @@ const userController = {
         } else {
             res.status(404);
             throw new Error('User not found');
+        }
+    }),
+    updateProfileImage: asyncHandler(async (req, res) => {
+        const { _id, imageUrl } = req.body
+        console.log("🚀 ~ file: userController.js:88 ~ updateProfileImage:asyncHandler ~ _id, imageUrl:", _id, imageUrl)
+        const objectId = new mongoose.Types.ObjectId(_id);
+        try {
+            const imageUpdated = await userModel.findOneAndUpdate({ _id: _id }, { image: imageUrl }, { new: true })
+            res.status(201).json(imageUpdated)
+        } catch (error) {
+            throw new Error('Error updating profile');
         }
     })
 }

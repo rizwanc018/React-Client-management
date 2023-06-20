@@ -10,6 +10,7 @@ router.post('/auth', userController.authUser)
 router.post('/logout', userController.logOutUser)
 router.get('/profile', verifyUser, userController.getUserProfile)
 router.put('/profile', verifyUser, userController.updateUser)
+router.put('/profile/image', userController.updateProfileImage)
 
 
 export default router

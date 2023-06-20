@@ -8,6 +8,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import HomePage from './pages/HomePage.jsx';
 import LoginPage from './pages/LoginPage.jsx';
 import RegisterPage from './pages/RegisterPage.jsx';
+import ProfilePage from './pages/ProfilePage.jsx';
+import PrivateRoute from './components/PrivateRoute.jsx';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -15,6 +17,10 @@ const router = createBrowserRouter(
       <Route index={true} path='/' element={<HomePage />} />
       <Route path='/login' element={<LoginPage />} />
       <Route path='/register' element={<RegisterPage />} />
+      <Route path='' element={<PrivateRoute />}>
+        <Route path='/profile' element={<ProfilePage />} />
+      </Route>
+
     </Route>
   )
 )
