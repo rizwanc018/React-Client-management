@@ -1,5 +1,6 @@
 import express from "express";
 import userRouter from "./routes/userRoutes.js"
+import adminRouter from "./routes/adminRoutes.js"
 import morgan from "morgan";
 import cookieParser from 'cookie-parser';
 import { notFound, errorHandler } from "./middlewares/errorMiddleware.js";
@@ -17,6 +18,8 @@ app.use(express.urlencoded({ extends: true }))
 app.use(cookieParser())
 
 app.use('/api/user', userRouter);
+app.use('/api/admin', adminRouter);
+
 
 app.use(notFound)
 app.use(errorHandler)

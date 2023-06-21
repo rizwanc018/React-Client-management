@@ -1,6 +1,6 @@
 import asyncHandler from 'express-async-handler';
 import userModel from '../models/userModel.js';
-import generateJwtToken from '../utils/generateJwtToken.js';
+import { generateJwtToken } from '../utils/generateJwtToken.js';
 import mongoose from 'mongoose';
 
 const userController = {
