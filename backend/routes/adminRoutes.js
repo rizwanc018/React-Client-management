@@ -9,7 +9,11 @@ router.get('/', verifyAdmin, adminController.getAllUsers)
 router.post('/auth', adminController.authAdmin)
 router.post('/logout', adminController.logOutAdmin)
 router.post('/user', verifyAdmin, adminController.addUser)
-router.delete('/user', verifyAdmin, adminController.deleteUser)
+router.get('/user/:id', verifyAdmin, adminController.getUser)
+router.get('/user', adminController.searhUser)
+router.put('/user/:id', verifyAdmin, adminController.updateUser)
+router.delete('/user/:id', verifyAdmin, adminController.deleteUser)
+
 
 
 // router.get('/profile', verifyUser, adminController.getUserProfile)
