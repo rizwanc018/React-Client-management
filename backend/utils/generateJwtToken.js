@@ -13,8 +13,8 @@ const generateJwtToken = (res, userId) => {
     })
 }
 
-const generateAdminJwtToken = (res) => {
-    const token = jwt.sign({ admin: true }, process.env.JWT_SECRET, {
+const generateAdminJwtToken = (res ,adminId) => {
+    const token = jwt.sign({ adminId, admin: true }, process.env.JWT_SECRET, {
         expiresIn: '1d'
     })
 

@@ -5,11 +5,11 @@ import { verifyAdmin } from '../middlewares/authMiddleware.js'
 const router = express.Router()
 
 // router.post('/reg', adminController.registerAdmin)
-router.get('/', adminController.getAllUsers)
+router.get('/', verifyAdmin, adminController.getAllUsers)
 router.post('/auth', adminController.authAdmin)
 router.post('/logout', adminController.logOutAdmin)
-router.post('/user', adminController.addUser)
-router.delete('/user', adminController.deleteUser)
+router.post('/user', verifyAdmin, adminController.addUser)
+router.delete('/user', verifyAdmin, adminController.deleteUser)
 
 
 // router.get('/profile', verifyUser, adminController.getUserProfile)

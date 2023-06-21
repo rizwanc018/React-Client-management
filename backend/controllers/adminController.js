@@ -10,7 +10,7 @@ const adminController = {
         const admin = await adminModel.findOne({ name })
 
         if (admin && (await admin.matchPassword(password))) {
-            generateAdminJwtToken(res)
+            generateAdminJwtToken(res, admin._id)
 
             res.status(201).json({
                 _id: admin._id,
@@ -33,7 +33,7 @@ const adminController = {
         })
 
         if (admin) {
-            generateAdminJwtToken(res)
+            generateAdminJwtToken(res, admin._id)
             res.status(201).json({
                 _id: admin._id,
                 name: admin.name,
@@ -52,9 +52,7 @@ const adminController = {
         res.status(200).json({ msg: 'Logged out succesfully' })
     },
     getAllUsers: asyncHandler(async (req, res) => {
-        // const allUsers = await userModel.find({})
         const allUsers = await userModel.find({}, 'id name email');
-        console.log("🚀 ~ file: adminController.js:58 ~ getAllUsers:asyncHandler ~ allUsers:", allUsers)
         res.status(200).json(allUsers)
     }),
     updateUser: asyncHandler(async (req, res) => {

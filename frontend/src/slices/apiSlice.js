@@ -7,3 +7,9 @@ export const apiSlice = createApi({
     tagTypes: ['User'],
     endpoints: (builder) => ({})
 })
+
+export const apiSliceAdmin = createApi({
+    baseQuery,
+    tagTypes: ['Admin'],
+    endpoints: (builder) => ({})
+})

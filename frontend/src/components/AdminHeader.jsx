@@ -3,10 +3,10 @@ import { FaSignInAlt, FaSignOutAlt } from 'react-icons/fa';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { LinkContainer } from 'react-router-bootstrap'
-import { useLogoutMutation } from '../slices/usersApiSlice';
+import { useLogoutMutation } from '../slices/adminApiSlice';
 import { clearCredentials } from '../slices/authSlice';
 
-const Header = () => {
+const AdminHeader = () => {
     const { userInfo } = useSelector(state => state.auth)
     const [logOut] = useLogoutMutation()
     const dispatch = useDispatch()
@@ -26,18 +26,13 @@ const Header = () => {
             <Navbar bg='dark' variant='dark' expand='lg' collapseOnSelect>
                 <Container>
                     <LinkContainer to='/'>
-                        <Navbar.Brand>Client Management</Navbar.Brand>
+                        <Navbar.Brand>Client Management Admin</Navbar.Brand>
                     </LinkContainer>
                     <Navbar.Toggle aria-controls='basic-navbar-nav' />
                     <Navbar.Collapse id='basic-navbar-nav'>
                         <Nav className='ms-auto'>
                             {userInfo ? (<>
                                 <NavDropdown title={userInfo.name} id='username'>
-                                    <LinkContainer to='/profile'>
-                                        <NavDropdown.Item>
-                                            Profile
-                                        </NavDropdown.Item>
-                                    </LinkContainer>
                                     <NavDropdown.Item onClick={logoutHandler}>
                                         Logout
                                     </NavDropdown.Item>
@@ -62,4 +57,4 @@ const Header = () => {
     );
 };
 
-export default Header;
+export default AdminHeader;
