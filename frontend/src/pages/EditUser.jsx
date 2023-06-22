@@ -6,7 +6,6 @@ import { setCredentials } from '../slices/authSlice';
 import { toast } from 'react-toastify'
 import FormContainer from "../components/FormContainer";
 import Loader from '../components/Loader';
-// import { useUpdateMutation } from "../slices/usersApiSlice";
 import axios from "axios";
 import { useEditUserMutation, useGetUserQuery } from "../slices/adminApiSlice";
 
@@ -26,8 +25,8 @@ function EditUser() {
     const submitHandler = async (e) => {
         e.preventDefault()
         try {
-            await editUser({ id, name, email }).unwrap()
             navigate('/admin')
+            await editUser({ id, name, email }).unwrap()
         } catch (err) {
             toast(err?.data?.message || err.error, { type: 'error' });
         }

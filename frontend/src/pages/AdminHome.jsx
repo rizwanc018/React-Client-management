@@ -32,16 +32,8 @@ function AdminHome() {
     }
 
     useEffect(() => {
-        if (data) {
-            setClients(data)
-        }
-    }, [data])
-
-    // useEffect(() => {
-    //     if (data) {
-    //         setClients(data)
-    //     }
-    // }, [searchResult])
+        setClients(data)
+    },[data])
 
     return (
         <>

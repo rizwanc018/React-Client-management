@@ -12,7 +12,11 @@ import Loader from '../components/Loader';
 
 function LoginPage() {
     const [email, setEmail] = useState('')
+    const [emailValid, setEmailValid] = useState(true)
+
     const [password, setPassword] = useState('')
+    const [passwordValid, setPasswordValid] = useState(true)
+
 
     const navigate = useNavigate()
     const dispatch = useDispatch()
@@ -23,14 +27,26 @@ function LoginPage() {
     useEffect(() => {
         if (userInfo)
             navigate('/')
-    }, [navigate, userInfo])
+    }, [userInfo])
 
     const submitHandler = async (e) => {
         e.preventDefault()
         try {
-            const res = await login({ email, password }).unwrap()
-            dispatch(setCredentials({ ...res }))
-            navigate('/')
+            let e = email
+            let p = password
+            if (e && p) {
+                setEmailValid(true)
+                setPasswordValid(true)
+                const res = await login({ email, password }).unwrap()
+                dispatch(setCredentials({ ...res }))
+                navigate('/')
+            } else {
+                if (e.trim() === '')
+                    setEmailValid(false)
+                if (p.trim() === '')
+                    setPasswordValid(false)
+
+            }
         } catch (err) {
             toast(err?.data?.message || err.error, { type: 'error' });
         }
@@ -45,19 +61,27 @@ function LoginPage() {
                         type="email"
                         placeholder="Enter Email"
                         value={email}
-                        onChange={(e) => setEmail(e.target.value)}
+                        onChange={(e) => {
+                            setEmail(e.target.value)
+                            setEmailValid(true)
+                        }}
                     >
                     </Form.Control>
+                    {!emailValid && <p className='text-danger m-1'>Invalid Email</p>}
                 </Form.Group>
-                <Form.Group>
+                <Form.Group className='mt-4'>
                     <Form.Label>Password</Form.Label>
                     <Form.Control
                         type="password"
                         placeholder="Enter Password"
                         value={password}
-                        onChange={(e) => setPassword(e.target.value)}
+                        onChange={(e) => {
+                            setPassword(e.target.value)
+                            setPasswordValid(true)
+                        }}
                     >
                     </Form.Control>
+                    {!passwordValid && <p className='text-danger m-1'>Invalid Password</p>}
                 </Form.Group>
                 {isLoading && <Loader />}
                 <Button type="submit" variant="primary" className="mt-3">

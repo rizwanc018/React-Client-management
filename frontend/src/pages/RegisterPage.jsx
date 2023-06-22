@@ -15,6 +15,10 @@ function RegisterPage() {
     const [password, setPassword] = useState('')
     const [confirmPassword, setconfirmPassword] = useState('')
 
+    const [namedValid, setNamedValid] = useState(true)
+    const [emailValid, setEmailValid] = useState(true)
+    const [passwordValid, setPasswordValid] = useState(true)
+
     const dispatch = useDispatch()
     const navigate = useNavigate()
 
@@ -29,17 +33,36 @@ function RegisterPage() {
 
     const submitHandler = async (e) => {
         e.preventDefault()
-        if (password !== confirmPassword)
-            toast.error('Passwords do not match')
-        else {
-            try {
-                const res = await register({ name, email, password }).unwrap()
-                dispatch(setCredentials({ ...res }))
-                navigate('/')
-            } catch (err) {
-                toast(err?.data?.message || err.error, { type: 'error' });
+        let nm = name
+        let em = email
+        let p = password
+        if (nm && em && p) {
+            setNamedValid(true)
+            setEmailValid(true)
+            setPasswordValid(true)
+
+            if (password !== confirmPassword)
+                toast.error('Passwords do not match')
+            else {
+                try {
+                    const res = await register({ name, email, password }).unwrap()
+                    console.log("🚀 ~ file: RegisterPage.jsx:49 ~ submitHandler ~ res:", res)
+                    dispatch(setCredentials({ ...res }))
+                    navigate('/')
+                } catch (err) {
+                    toast(err?.data?.message || err.error, { type: 'error' });
+                }
             }
+        } else {
+            if (nm.trim() === '')
+                setNamedValid(false)
+            if (em.trim() === '')
+                setEmailValid(false)
+            if (p.trim() === '')
+                setPasswordValid(false)
+
         }
+
     }
     return (
         <FormContainer>
@@ -51,9 +74,13 @@ function RegisterPage() {
                         type="name"
                         placeholder="Enter Name"
                         value={name}
-                        onChange={(e) => setName(e.target.value)}
+                        onChange={(e) => {
+                            setName(e.target.value)
+                            setNamedValid(true)
+                        }}
                     >
                     </Form.Control>
+                    {!namedValid && <p className='text-danger m-1'>Invalid Name</p>}
                 </Form.Group>
                 <Form.Group>
                     <Form.Label>Email Address</Form.Label>
@@ -61,9 +88,13 @@ function RegisterPage() {
                         type="email"
                         placeholder="Enter Email"
                         value={email}
-                        onChange={(e) => setEmail(e.target.value)}
+                        onChange={(e) => {
+                            setEmail(e.target.value)
+                            setEmailValid(true)
+                        }}
                     >
                     </Form.Control>
+                    {!emailValid && <p className='text-danger m-1'>Invalid Email</p>}
                 </Form.Group>
                 <Form.Group>
                     <Form.Label>Password</Form.Label>
@@ -71,9 +102,13 @@ function RegisterPage() {
                         type="password"
                         placeholder="Enter Password"
                         value={password}
-                        onChange={(e) => setPassword(e.target.value)}
+                        onChange={(e) => {
+                            setPassword(e.target.value)
+                            setPasswordValid(true)
+                        }}
                     >
                     </Form.Control>
+                    {!passwordValid && <p className='text-danger m-1'>Invalid Password</p>}
                 </Form.Group>
                 <Form.Group>
                     <Form.Label>Confirm Password</Form.Label>
