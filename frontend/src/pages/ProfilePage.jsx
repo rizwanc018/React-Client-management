@@ -7,8 +7,8 @@ import { toast } from 'react-toastify'
 import FormContainer from "../components/FormContainer";
 import Loader from '../components/Loader';
 import { useChangeProfileImageMutation, useUpdateMutation } from "../slices/usersApiSlice";
-import { Image, Transformation } from 'cloudinary-react';
-import Axios from "axios";
+import { Image } from 'cloudinary-react';
+import axios from "axios";
 
 
 function ProfilePage() {
@@ -31,12 +31,12 @@ function ProfilePage() {
     formdata.append('file', imageUpload)
     formdata.append('upload_preset', 'fpljsbae')
     try {
-      const AxiosRes = await Axios.post(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`, formdata)
+      const AxiosRes = await axios.post(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`, formdata)
       const imgurl = AxiosRes.data.url
       setImage(imgurl)
+      toast.success('Profile image updated')
       const res = await updateProfileImage({ _id: userInfo._id, imageUrl: AxiosRes.data.url }).unwrap()
       dispatch(setCredentials({ ...res }))
-      toast.success('Profile image updated')
     } catch (err) {
       toast.error(err?.data?.message || err.error)
     }
@@ -46,7 +46,7 @@ function ProfilePage() {
     setName(userInfo.name)
     setEmail(userInfo.email)
     setImage(userInfo.image)
-  }, [userInfo.name, userInfo.email, userInfo.email]);
+  }, [userInfo.name, userInfo.email]);
 
 
   const submitHandler = async (e) => {
@@ -55,8 +55,9 @@ function ProfilePage() {
       toast.error('Passwords do not match')
     else {
       try {
-        const res = await updateProfile({ _id: userInfo._id, name, email, password }).unwrap()
-        dispatch(setCredentials({ ...res }))
+        const body = { _id: userInfo._id, name, email, password }
+        let resp = await axios.put(`http://localhost:3000/api/user/profile`, body)
+        dispatch(setCredentials({ ...resp.data}))
         toast.success('Profile updated')
       } catch (err) {
         toast.error(err?.data?.message || err.error)

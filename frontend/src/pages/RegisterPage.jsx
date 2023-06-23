@@ -7,6 +7,7 @@ import { setCredentials } from '../slices/authSlice';
 import { toast } from 'react-toastify'
 import Loader from '../components/Loader';
 import FormContainer from "../components/FormContainer";
+import axios from 'axios'
 
 
 function RegisterPage() {
@@ -22,8 +23,8 @@ function RegisterPage() {
     const dispatch = useDispatch()
     const navigate = useNavigate()
 
-    const { userInfo } = useSelector(state => state.auth)
     const [register, { isLoading, error }] = useRegisterMutation()
+    const { userInfo } = useSelector(state => state.auth)
 
     useEffect(() => {
         if (userInfo) {
@@ -45,9 +46,9 @@ function RegisterPage() {
                 toast.error('Passwords do not match')
             else {
                 try {
-                    const res = await register({ name, email, password }).unwrap()
-                    console.log("🚀 ~ file: RegisterPage.jsx:49 ~ submitHandler ~ res:", res)
-                    dispatch(setCredentials({ ...res }))
+                    const body = { name, email, password }
+                    let resp = await axios.post(`http://localhost:3000/api/user`, body)
+                    dispatch(setCredentials({ ...resp.data }))
                     navigate('/')
                 } catch (err) {
                     toast(err?.data?.message || err.error, { type: 'error' });

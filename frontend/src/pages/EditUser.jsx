@@ -25,8 +25,11 @@ function EditUser() {
     const submitHandler = async (e) => {
         e.preventDefault()
         try {
+            // const res = await editUser({ id, name, email }).unwrap()
+            const body = { name, email }
+            let resp = await axios.put(`http://localhost:3000/api/admin/user/${id}`, body)
+            toast.success(resp.data.msg)
             navigate('/admin')
-            await editUser({ id, name, email }).unwrap()
         } catch (err) {
             toast(err?.data?.message || err.error, { type: 'error' });
         }

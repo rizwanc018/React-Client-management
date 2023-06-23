@@ -38,6 +38,7 @@ function LoginPage() {
                 setEmailValid(true)
                 setPasswordValid(true)
                 const res = await login({ email, password }).unwrap()
+                console.log("🚀 ~ file: LoginPage.jsx:41 ~ submitHandler ~ res:", res)
                 dispatch(setCredentials({ ...res }))
                 navigate('/')
             } else {

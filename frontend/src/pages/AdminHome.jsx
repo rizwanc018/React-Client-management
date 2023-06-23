@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useDeleteMutation, useHomeQuery, useSearchUserQuery } from '../slices/adminApiSlice'
 import { Container, Row, Col, Button, Table } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { setId } from '../slices/adminSlice';
 import axios from 'axios'
 
@@ -24,23 +24,31 @@ function AdminHome() {
         navigate('/admin/user/edit')
         dispatch(setId(id))
     }
-
+    
     const useSearchUserQuery = async () => {
-        let searchResult = await axios.get(`http://localhost:3000/api/admin/user?q=${search}`).then(resp => {
-            setClients(resp.data);
-        })
+        let searchResult = await axios.get(`http://localhost:3000/api/admin/user?q=${search}`, { withCredentials: true })
+        setClients(searchResult.data);
     }
 
+    const { userInfo } = useSelector(state => state.auth)
+
     useEffect(() => {
+        if (!userInfo)
+            navigate('/')
+    }, [userInfo])
+
+
+    useEffect(() => {
+        refetch()
         setClients(data)
-    },[data])
+    }, [data])
 
     return (
         <>
             <h1>All Users</h1>
             <Container>
-                <Row>
-                    <div>
+                <Row className='d-flex align-items-center'>
+                    <div className='col-auto'>
                         <input type="text" className='me-3' onChange={(e) => setSearch(e.target.value)} value={search} />
                         <Button className='btn btn-info' onClick={useSearchUserQuery}>Search</Button>
                     </div>

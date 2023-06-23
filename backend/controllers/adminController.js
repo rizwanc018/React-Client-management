@@ -127,15 +127,17 @@ const adminController = {
     updateUser: asyncHandler(async (req, res) => {
 
         const { name, email } = req.body
+        console.log("🚀 ~ file: adminController.js:130 ~ updateUser:asyncHandler ~ name, email:", name, email)
         const userId = req.params.id
+        console.log("🚀 ~ file: adminController.js:132 ~ updateUser:asyncHandler ~ userId:", userId)
         const objectId = new mongoose.Types.ObjectId(userId);
         const result = await userModel.findOneAndUpdate({ _id: objectId }, { name, email }, { new: true })
-        res.status(200).json({ msg: "update successfull" })
+        console.log("🚀 ~ file: adminController.js:135 ~ updateUser:asyncHandler ~ result:", result)
+        res.status(200).json({ msg: "Updated successfull" })
     }),
     searhUser: asyncHandler(async (req, res) => {
         const q = req.query.q
         const users = await userModel.find({ name: { $regex: q } })
-        console.log("🚀 ~ file: adminController.js:139 ~ searhUser:asyncHandler ~ users:", users)
         res.status(200).json(users)
     }),
 }
